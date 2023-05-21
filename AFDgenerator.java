@@ -42,17 +42,17 @@ public class AFDgenerator{
         Scanner obs1 = new Scanner(archivoo);
         Scanner obs2 = new Scanner(filess);
 //
-        int alamacenador1 = 0;
+        int almacenador1 = 0;
         int  contadorA = 1;
         
         //entiendo que es mientras halla que leer ira sumando las posiciones
         while(obs2.hasNextLine()){
             String lines = obs2.nextLine();
-            alamacenador1++;
+            almacenador1++;
         }
 
         //////
-        alamacenador1 = alamacenador1 - 3;
+        almacenador1 = almacenador1 - 3;
         FileReader lectorArchi = new FileReader(this.file);
 
         int contEstados = 0;
@@ -110,6 +110,101 @@ public class AFDgenerator{
 ///////////mi cerebro explotooooo
 //aaaaaaaa jajajaja me petre ya 
 //toy cagadisimo
+    try {
+        int z = 0;
+        LinkedList<String> numestados = new LinkedList<String>();
+        LinkedList<String> estfin = new LinkedList<String>();
+        numestados.add("0");
+
+        //Inicializa las listas para el estado final y las transiciones
+        while (z < this.transNuevas.size()) {
+            String linea = this.transNuevas.get(z);
+            String exp[] = linea.split("->");
+            if (numestados.contains(exp[0] == false)) {
+                numestados.add(exp[0]);
+                estfin.add(exp[0]);
+                }
+            z++;
+        }
+        //Verifica si hay simbolos terminales
+        for(int i = 0; i < this.simboTerminales.size(); i++){
+            if (numestados.contains(this.simboTerminales.get(i)) == false) {
+                numestados.add(this.simboTerminales.get(i));
+                estfin.add(this.simboTerminales.get(i));
+            }
+        }
+        
+        numestados.add("F");
+        almacenador1 = almacenador1.size();
+        int fins = almacenador1 - 1;
+        String[][] trans = new String[this.abcAlfabetoo.size() + 1][almacenador1];
+        int cont1 = 0;
+        //Filas transiciones
+        int t = 0;
+        int u = 0;
+        for(int filas = 0; filas < this.abcAlfabetoo.size() + 1; filas++){
+            for(int colums = 0; colums < almacenador1; colums++ ){
+                trans[filas][colums] = "0";
+            }
+        }
+
+        for(int colums2 = 0; colums2 < almacenador1; colums2++){
+            trans[0][colums2] = Integer.toString(colums2);
+        }
+
+        // Columnas transiciones
+        for(int n = 0; n < this.abcAlfabetoo.size() + 1; n++){
+            for(int c = 1; c < almacenador1; c++){
+                if (t < transNuevas.size()) {
+                    String value = transNuevas.get(t);
+                    String[] value2 = value.split("->");
+                    if (value2[1].length() == 1) {
+                        if (estfin.contains(value2[1])) {
+                            int lineanum = almacenador1.indexOf(value2[0]);
+                            if (trans[0][lineanum].equals("0")) {
+                                trans[0][lineanum] = Integer.toString(almacenador1.indexOf(value2[1]));
+                            }
+                            else{
+                                trans[0][lineanum] += ";" + Integer.toString(almacenador1.indexOf(value2[1]));
+                            }
+                            t = transNuevas.indexOf(value2);
+                            transNuevas.remove(t);
+                        }
+                        else if(estfin.contains(value2[1]) == false) {
+                            if (value2[1].equals("d")) {
+                                
+                            }
+                            int y = almacenador1.indexOf(value2[0]);;
+                            int p = this.abcAlfabetoo.indexOf(value2);
+
+                            t = transNuevas.indexOf(value2);
+
+                            if (trans[p + 1][y].equals("0")) {
+                                trans[p + 1][y] += ";" + Integer.toString(almacenador1.size() - 1);
+                                u = 0;
+                            }
+                            else{
+                                trans[p + 1][y] += ";" + Integer.toString(almacenador1.size() - 1);
+                                u = 0;
+                            }
+
+                            transNuevas.remove(t);
+                            u = 0;
+                            break;
+
+                        }
+                    }
+                    else{  //your turn (～￣▽￣)～
+
+                    }
+                }
+            }
+        }
+
+
+    } catch (FileNotFoundException ex) {
+        System.out.println("El archivo no existe");
+    }
 
 
     public void grammar(int contabc, String same, String cam, String sim, int x) {
